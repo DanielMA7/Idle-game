@@ -75,6 +75,7 @@ h2 {
     flex-direction: column;
     gap: 10px;
     padding-top: 10px;
+    overflow-x: hidden;
 }
 
 .mining-container {
@@ -178,6 +179,7 @@ h2 {
     align-items: center;
     padding-left: 5px;
     padding-right: 5px;
+    position: relative;
 }
 
 .inventory-item-name {
@@ -190,21 +192,25 @@ h2 {
     font-size: 1rem;
 }
 
+.user-coins-container {
+    position: sticky;
+    width: 100%;
+    height: 50px;
+    top: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: 15px;
+    gap: 5px;
+}
 
+.user-coins-text {
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Scroll bar settings */
 
 ::-webkit-scrollbar-track
 {
