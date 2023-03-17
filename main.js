@@ -3,6 +3,10 @@ const mineIronButton = document.getElementById("mine-iron-button");
 const loadingCoalBar = document.getElementById("loadingCoalBar");
 const loadingIronBar = document.getElementById("loadingIronBar");
 const inventoryMainSpace = document.getElementById("inventory-space")
+const coinsTextSpace = document.getElementById("user-coins-count")
+const miningLevelExpBar = document.getElementById("mining-level-bar")
+const miningExpValueText = document.getElementById("mining-level-exp-count")
+const miningLevelDisplay = document.getElementById("mining-level-display")
 
 let isLoaded = false;
 let loadingInterval;
@@ -10,6 +14,15 @@ let loadingInterval;
 /*       This is the inventory holder       */
 
 let inventoryArray = [ ]
+
+/*         User related info         */ 
+ let userStats = {
+  Coins: 0,
+  MiningLevel: 1,
+  MiningCurrentExp: 0,
+  MiningMaxExp: 100
+ }
+
 
 
 /*       This is the item array for all the items     */
@@ -22,13 +35,22 @@ const itemsList = [
         name: "Coal Ore",
         imageID: "assets/Coal.webp",
         quantity: 1,
+        "sell price": 6,
+        ExpValue: 5
     },
     ai_Iron_Ore = {
       name: "Iron Ore",
       imageID: "assets/Iron_Ore.webp",
       quantity: 0,
+      "sell price": 10,
+      ExpValue: 10
     }
 ]
+
+/*       Updating Coins       */
+function updateCoins(){
+coinsTextSpace.innerText = userStats["Coins"]
+}
 
 
 
@@ -67,6 +89,30 @@ function updateInventory() {
       inventoryMainSpace.appendChild(inventoryItemContainer)
   }
 }
+
+/*           Updates the mining level bar and text and controls the mining level progression             */
+
+ function updateMiningLevel(exp){
+  if (userStats["MiningCurrentExp"] < userStats["MiningMaxExp"]){
+    userStats["MiningCurrentExp"]+= exp
+    let divideValue = userStats["MiningCurrentExp"] / userStats["MiningMaxExp"] 
+    miningLevelExpBar.style.width = divideValue*100 + "%"
+    miningExpValueText.innerHTML = userStats["MiningCurrentExp"] + "/" + userStats["MiningMaxExp"]
+    miningLevelDisplay.innerHTML="Mining Level: " + userStats["MiningLevel"]
+
+  }else if(userStats["MiningCurrentExp"] + exp >= userStats["MiningMaxExp"]){
+    userStats["MiningLevel"]++;
+    userStats["MiningCurrentExp"] = 0
+    let newMaxValue = Math.ceil(userStats["MiningMaxExp"]*1.5)
+    userStats["MiningMaxExp"] = newMaxValue
+    let divideValue = userStats["MiningCurrentExp"] / userStats["MiningMaxExp"] 
+    miningLevelExpBar.style.width = divideValue*100 + "%"
+    miningExpValueText.innerHTML = userStats["MiningCurrentExp"] + "/" + userStats["MiningMaxExp"]
+
+  }
+
+};
+
 
 
 
@@ -116,10 +162,11 @@ function loadCoal() {
       progress++;
       if (progress >= 100) {
         lookUpInventory(1, 'name', 'Coal')
+        updateMiningLevel(5)
         progress = 0;
       }
       loadingCoalBar.style.width = `${progress}%`;
-    }, 10);
+    }, 5);
     
   }
 }
@@ -138,10 +185,11 @@ function loadIron() {
       progress++;
       if (progress >= 100) {
         lookUpInventory(2, 'name', 'Iron Ore')
+        updateMiningLevel(10)
         progress = 0;
       }
       loadingIronBar.style.width = `${progress}%`;
-    }, 10);
+    }, 8);
     
   }
 }
@@ -149,7 +197,5 @@ function loadIron() {
 mineCoalButton.addEventListener("click", loadCoal);
 mineIronButton.addEventListener("click", loadIron);
 
-function test1(element){
-  itemsList.forEach()
-}
 
+updateCoins()
